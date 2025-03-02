@@ -13,20 +13,37 @@ public class Player : MonoBehaviour
     private float minVelocity = 0.01f;
     [SerializeField]
     private float velocity = 2.0f;
-    //[SerializeField]
-    //private float deceleration = 0.97f;
+
+    [Header("Fire")]
+    [SerializeField]
+    private GameObject bulletPrefab;
+    [SerializeField]
+    private float shootTime = 0.5f;
+    [SerializeField]
+    private float bulletSpeed = 20.0f;
+    [SerializeField]
+    private float bulletLiveTime = 2.0f;
+
 
     [Header("Debug")]
-    [SerializeField]
     private Vector2 currVelocity;
 
-    [SerializeField]
     private float angle;
     private readonly float HalfSqrt2 = Mathf.Sqrt(2.0f) / 2.0f;
+
+    GameObject card;
+
+    [SerializeField]
+    private bool canShoot;
+    [SerializeField]
+    private float shootTimer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        card = null;
+        canShoot = true;
+        shootTimer = 0.0f;
     }
 
     // Update is called once per frame
@@ -71,12 +88,60 @@ public class Player : MonoBehaviour
         float angleSin = Mathf.Asin(playerForward.y);
         angle = (angleSin > 0.0f) ? angleCos : -angleCos;
 
+        // Flip Cards.
+        if (Input.GetKeyDown("space"))
+        {
+            if (card) { card.GetComponent<Card>().Flip(); }
+        }
+
+        // Shot proyectiles.
+        if(Input.GetMouseButton(0))
+        {
+            if(canShoot)
+            {
+                Fire();
+                canShoot = false;
+            }
+        }
+
+        if(!canShoot)
+        {
+            shootTimer += dt;
+            if(shootTimer > shootTime)
+            {
+                canShoot = true;
+                shootTimer = 0.0f;
+            }
+        }
+
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         // Update player transform.
         transform.position += new Vector3(currVelocity.x, currVelocity.y, transform.position.z);
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle);
+    }
+
+    void Fire()
+    {
+        GameObject newBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        newBullet.GetComponent<Bullet>().Initialize(bulletSpeed, bulletLiveTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Card")
+        {
+            card = collision.gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Card")
+        {
+            card = null;
+        }
     }
 }
