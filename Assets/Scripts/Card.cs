@@ -1,4 +1,5 @@
 using UnityEngine;
+using static CardManager;
 
 public class Card : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class Card : MonoBehaviour
     [SerializeField]
     private CardState state;
 
+    [SerializeField]
+    private TypesOfCards type;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
