@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static CardManager;
 
 public class CardManager : MonoBehaviour
 {
@@ -36,12 +37,15 @@ public class CardManager : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField]
-    GameObject[] cardList;
+    List<GameObject> cardList;
+
+    List<Card> flippedCards = new List<Card>();
+    int numFlippedCards;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        cardList = new GameObject[height * width];
+        cardList = new List<GameObject>();
         ushort[] types;
         GenerateCardTypes(out types, (ushort)(height * width));
         // Shuffle();
@@ -73,6 +77,7 @@ public class CardManager : MonoBehaviour
             types[i] = type;
             if (--cardPool[type] == 0) { cardPool.Remove(type); }
         }
+
         // Generate the pairs.
         for (int i = halfLength; i < types.Length; ++i)
         {
@@ -97,8 +102,50 @@ public class CardManager : MonoBehaviour
             float y = (cardCollider.size.y + hMargin) * r;
             Vector3 newCardPos = new Vector3(x, y, 0.0f) - generalOffSet;
 
-            cardList[i] = Instantiate(cardPrefab, newCardPos, Quaternion.identity);
+            GameObject newCard = Instantiate(cardPrefab, newCardPos, Quaternion.identity);
+            cardList.Add(newCard);
+         
+            newCard.GetComponent<Card>().type = (TypesOfCards)types[i];
+            newCard.GetComponent<Card>().IsFlipped += OnFlippedCard;
         }
+    }
 
+    private void OnFlippedCard(Card card)
+    {
+        flippedCards.Add(card);
+        bool match = true;
+
+        if(++numFlippedCards >= matchNumber)
+        {
+            int type = -1;
+            foreach(Card c in flippedCards)
+            {
+                type = (type == -1) ? (int)c.type : type;
+                if(type != (int)c.type)
+                {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (match)
+            {
+                foreach (Card c in flippedCards)
+                {
+                    c.Matched();
+                    cardList.Remove(c.gameObject);
+                }
+            }
+            else
+            {
+                foreach (Card c in flippedCards)
+                {
+                    c.Unflip();
+                }
+            }
+
+            flippedCards.Clear();
+            numFlippedCards = 0;
+        }
     }
 }
