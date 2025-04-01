@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Card
   - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - Player
   - Cards
   - Enemies
-  - 
+  - Bullets
   - 
   - 
   - 
@@ -54,6 +55,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 1792212127
+    locked: 0
+  - name: Bullets
+    uniqueID: 3211370311
     locked: 0
   m_RenderingLayers:
   - Default

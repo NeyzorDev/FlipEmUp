@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    private string ownerTag;
+
     private Vector3 velocity;
     private float liveTime;
     private float liveTimer;
@@ -12,8 +14,9 @@ public class Bullet : MonoBehaviour
         liveTimer = 0.0f;
     }
 
-    public void Initialize(float speed, float liveTime)
+    public void Initialize(string oTag, float speed, float liveTime)
     {
+        ownerTag = oTag;
         float z = Mathf.Deg2Rad * transform.rotation.eulerAngles.z;
         velocity = new Vector3(Mathf.Cos(z), Mathf.Sin(z), 0.0f) * speed;
         this.liveTime = liveTime;
@@ -36,5 +39,19 @@ public class Bullet : MonoBehaviour
         float dt = Time.deltaTime;
 
         transform.position += velocity * dt;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag != ownerTag)
+        {
+            Ship s = collision.gameObject.GetComponent<Ship>();
+            if (s)
+            {
+                s.Hit();
+            }
+
+            Destroy(gameObject);
+        }
     }
 }

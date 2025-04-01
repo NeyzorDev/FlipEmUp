@@ -1,24 +1,22 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
 
-public class Player : MonoBehaviour
+public class Player : Ship
 {
     [Header("Movement")]
     [SerializeField]
     private float maxVelocity = 3.0f;
     [SerializeField]
-    private float minVelocity = 0.01f;
+    private float minVelocity = 0.001f;
     [SerializeField]
     private float velocity = 2.0f;
+    [SerializeField]
+    private float deceleration = 0.995f;
 
     [Header("Fire")]
     [SerializeField]
     private GameObject bulletPrefab;
     [SerializeField]
-    private float shootTime = 0.5f;
+    private float shootTime = 0.3f;
     [SerializeField]
     private float bulletSpeed = 20.0f;
     [SerializeField]
@@ -73,8 +71,8 @@ public class Player : MonoBehaviour
         else
         {
             // No movement input.
-            //currVelocity *= deceleration;
-            //if(currVelocity.sqrMagnitude < minVelocity)
+            currVelocity *= deceleration;
+            if(currVelocity.sqrMagnitude < minVelocity)
             {
                 currVelocity = Vector2.zero;
             }
@@ -126,7 +124,12 @@ public class Player : MonoBehaviour
     void Fire()
     {
         GameObject newBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-        newBullet.GetComponent<Bullet>().Initialize(bulletSpeed, bulletLiveTime);
+        newBullet.GetComponent<Bullet>().Initialize(gameObject.tag, bulletSpeed, bulletLiveTime);
+    }
+
+    public override void Hit()
+    {
+        Debug.Log("Player got hit");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

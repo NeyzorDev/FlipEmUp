@@ -102,7 +102,7 @@ public class CardManager : MonoBehaviour
             float y = (cardCollider.size.y + hMargin) * r;
             Vector3 newCardPos = new Vector3(x, y, 0.0f) - generalOffSet;
 
-            GameObject newCard = Instantiate(cardPrefab, newCardPos, Quaternion.identity);
+            GameObject newCard = Instantiate(cardPrefab, newCardPos, Quaternion.identity, this.transform);
             cardList.Add(newCard);
          
             newCard.GetComponent<Card>().type = (TypesOfCards)types[i];
