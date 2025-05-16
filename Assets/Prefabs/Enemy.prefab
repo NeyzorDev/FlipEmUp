@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1030674115817878142}
   - component: {fileID: 6161556933503333257}
   - component: {fileID: 6909916204721352173}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -48,11 +48,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints: 3
-  velocity: 1
+  speed: 12
   bulletPrefab: {fileID: 1118927447165097035, guid: 5d188ca9cd105e14f98e19a688a1492f, type: 3}
-  shootTime: 2
+  shootTime: 1
   bulletSpeed: 20
-  bulletLiveTime: 2
+  bulletLiveTime: 4
+  bulletsPerCicle: 3
 --- !u!212 &1030674115817878142
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -169,7 +170,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -180,4 +181,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 7

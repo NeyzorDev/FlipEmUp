@@ -7,10 +7,10 @@ public class Timer
 	private float timer;
 	private bool isPlaying;
 
-	public delegate void TimeoutDelegate();
-	private TimeoutDelegate Timeout;
+	public delegate void TimeoutHandler();
+	private TimeoutHandler Timeout;
 
-	public Timer(float t, TimeoutDelegate to)
+	public Timer(float t, TimeoutHandler to)
 	{
 		time = t;
 		isPlaying = false;
