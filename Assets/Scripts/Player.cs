@@ -10,7 +10,7 @@ public class Player : Ship
     [SerializeField]
     private float velocity = 2.0f;
     [SerializeField]
-    private float deceleration = 0.995f;
+    private float deceleration = 0.9f;
 
     [Header("Fire")]
     [SerializeField]
@@ -24,7 +24,9 @@ public class Player : Ship
 
 
     [Header("Debug")]
+    [SerializeField]
     private Vector2 currVelocity;
+    private Vector2 lastInputVelocity;
 
     private float angle;
     private readonly float HalfSqrt2 = Mathf.Sqrt(2.0f) / 2.0f;
@@ -39,7 +41,13 @@ public class Player : Ship
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currVelocity = Vector2.zero;
+        lastInputVelocity = Vector2.zero;
+        
+        angle = 0;
+        
         card = null;
+        
         canShoot = true;
         shootTimer = 0.0f;
     }
@@ -57,7 +65,7 @@ public class Player : Ship
         {
             //Movement update.
             Vector2 dVel = new Vector2(moveX * velocity * dt, moveY * velocity * dt);
-            if (moveX != 0.0f || moveY != 0.0f) { dVel *= HalfSqrt2; }
+            if (moveX != 0.0f && moveY != 0.0f) { dVel *= HalfSqrt2; }
 
             currVelocity += dVel;
 
@@ -67,11 +75,12 @@ public class Player : Ship
                 // Can be improved. Shouldnt be done with sqr.
                 currVelocity = currVelocity / currVelocity.sqrMagnitude * maxVelocity * maxVelocity;
             }
+            lastInputVelocity = -deceleration * currVelocity;
         }
         else
         {
             // No movement input.
-            currVelocity *= deceleration;
+            currVelocity += lastInputVelocity * dt;
             if(currVelocity.sqrMagnitude < minVelocity)
             {
                 currVelocity = Vector2.zero;

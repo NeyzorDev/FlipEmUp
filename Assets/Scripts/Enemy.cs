@@ -16,7 +16,7 @@ public class Enemy : Ship
     [SerializeField]
     private float shootTime = 0.5f;
     [SerializeField]
-    private float bulletSpeed = 12.0f;
+    private float bulletSpeed = 25.0f;
     [SerializeField]
     private float bulletLiveTime = 4.0f;
     [SerializeField]

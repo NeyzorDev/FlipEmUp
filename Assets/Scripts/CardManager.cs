@@ -17,9 +17,9 @@ public class CardManager : MonoBehaviour
 
     [Header("Field Design")]
     [SerializeField]
-    float hMargin = 1.0f;
+    float hMargin = 3.0f;
     [SerializeField]
-    float wMargin = 2.0f;
+    float wMargin = 4.0f;
 
     [Header("Card Prefab")]
     [SerializeField]
@@ -88,9 +88,9 @@ public class CardManager : MonoBehaviour
     private void CreateAndPlaceCards(ref ushort[] types)
     {
         BoxCollider2D cardCollider = cardPrefab.GetComponent<BoxCollider2D>();
-
-        float offX =  (width / 2.0f - 0.5f) * (cardCollider.size.x + wMargin);
-        float offY = (height / 2.0f - 0.5f) * (cardCollider.size.y + hMargin);
+        // TODO: Optimize Maths if possible
+        float offX =  (width / 2.0f - 0.5f) * cardPrefab.transform.localScale.x * (cardCollider.size.x + wMargin);
+        float offY = (height / 2.0f - 0.5f) * cardPrefab.transform.localScale.y * (cardCollider.size.y + hMargin);
         Vector3 generalOffSet = new Vector3(offX, offY, 0.0f);
         
         for(int i = 0; i < types.Length; ++i)
@@ -98,8 +98,8 @@ public class CardManager : MonoBehaviour
             int r = i / width;
             int c = i % width;
 
-            float x = (cardCollider.size.x + wMargin) * c;
-            float y = (cardCollider.size.y + hMargin) * r;
+            float x = cardPrefab.transform.localScale.x * (cardCollider.size.x + wMargin) * c;
+            float y = cardPrefab.transform.localScale.y * (cardCollider.size.y + hMargin) * r;
             Vector3 newCardPos = new Vector3(x, y, 0.0f) - generalOffSet;
 
             GameObject newCard = Instantiate(cardPrefab, newCardPos, Quaternion.identity, this.transform);
