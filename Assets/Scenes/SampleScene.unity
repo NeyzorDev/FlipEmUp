@@ -313,7 +313,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -512,14 +512,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints: 3
-  maxVelocity: 0.5
-  minVelocity: 0.01
-  velocity: 1.2
-  deceleration: 0.995
+  maxVelocity: 0.4
+  minVelocity: 0.001
+  velocity: 1.5
+  deceleration: 0.95
   bulletPrefab: {fileID: 1118927447165097035, guid: 5d188ca9cd105e14f98e19a688a1492f, type: 3}
   shootTime: 0.5
   bulletSpeed: 30
   bulletLiveTime: 2
+  currVelocity: {x: 0, y: 0}
   canShoot: 0
   shootTimer: 0
 --- !u!50 &551920495
@@ -663,7 +664,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hMargin: 2
-  wMargin: 2.5
+  wMargin: 3
   cardPrefab: {fileID: 910885729983467578, guid: ebf375b0ba9d6f54fb7f9d007f9f1cca, type: 3}
   height: 3
   width: 4
@@ -998,10 +999,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5257240036590627990, guid: 5d188ca9cd105e14f98e19a688a1492f, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1015,10 +1012,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 910885729983467578, guid: ebf375b0ba9d6f54fb7f9d007f9f1cca, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 910885729983467578, guid: ebf375b0ba9d6f54fb7f9d007f9f1cca, type: 3}
       propertyPath: m_Name
       value: Card
@@ -1119,6 +1112,10 @@ PrefabInstance:
     - target: {fileID: 5500744527336756105, guid: 13794fd1cbd7c0a48965dc64cf82077d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6366023362320530153, guid: 13794fd1cbd7c0a48965dc64cf82077d, type: 3}
+      propertyPath: bulletSpeed
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6912166830402477226, guid: 13794fd1cbd7c0a48965dc64cf82077d, type: 3}
       propertyPath: m_Name
