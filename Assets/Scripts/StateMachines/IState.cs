@@ -1,11 +1,12 @@
 ﻿using System;
-
+using UnityEngine;
 
 
 public interface IState
 {
-    void OnStart();
+    void OnEnter();
     void Update();
+    void FixedUpdate();
     void OnExit();
 
 }

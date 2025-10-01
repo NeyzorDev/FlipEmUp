@@ -1,27 +1,34 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
+[Serializable]
 public abstract class State : IState
 {
-    protected readonly GameObject owner;
+    //protected readonly MonoBehaviour owner;
     //protected readonly Animator animator;
 
-    public State(GameObject owner)
+    public State(/*MonoBehaviour owner*/)
     {
-        this.owner = owner;
+        //this.owner = owner;
     }
 
-    public virtual void OnExit()
-    {
-        // NotImplemented
-    }
-
-    public virtual void OnStart()
+    public virtual void OnEnter()
     {
         // NotImplemented
     }
 
     public virtual void Update()
+    {
+        // NotImplemented
+    }
+
+    public virtual void FixedUpdate()
+    {
+        // NotImplemented
+    }
+
+    public virtual void OnExit()
     {
         // NotImplemented
     }

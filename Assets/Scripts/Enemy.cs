@@ -1,88 +1,62 @@
+using System;
 using UnityEngine;
+
+
+[Serializable]
+public class serTest
+{
+    public bool isTest = true;
+    [SerializeField]
+    private float speed = 2.3f;
+    [SerializeField]
+    private Vector3 pos = new Vector3(0.0f, 2.0f, 1.0f);
+    [SerializeField]
+    private float angle = 22.2f;
+}
 
 public class Enemy : Ship
 {
-    [Header("Movement")]
+    [Header("Serializable Tests")]
     [SerializeField]
-    private float speed = 15.0f;
-    [SerializeField]
-    private Vector3 offsetPosition = new Vector3(4.0f, 0.0f, 0.0f);
-    [SerializeField]
-    private float angleOffset = 30.0f;
+    private serTest test1 = null;
+    [SerializeReference]
+    private serTest test2 = null;
+    public serTest test3 = null;
 
-    [Header("Fire")]
+    [Header("Behaviors")]
     [SerializeField]
-    private GameObject bulletPrefab;
+    private StandarEnemyMove stateMove = null;
     [SerializeField]
-    private float shootTime = 0.5f;
-    [SerializeField]
-    private float bulletSpeed = 25.0f;
-    [SerializeField]
-    private float bulletLiveTime = 4.0f;
-    [SerializeField]
-    private int bulletsPerCicle = 3;
+    private StandarEnemyShoot stateShoot = null;
 
-    Vector3 originalPos;
-    Vector3 targetPos;
-    Timer shootTimer;
+    private StateMachine sm;
 
-    private Vector3 velocity;
-    private bool isMoving;
-
-    // OnMove Vars
-    Vector3 targetNormal;
-
-    // OnShoot Vars
-    int bullets;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Start()
     {
-        shootTimer = new Timer(shootTime, ShootReload);
+        InitializeSM();
+    }
 
-        isMoving = true;
-        OnEnterMove();
+    private void InitializeSM()
+    {
+        sm = new StateMachine();
+        stateMove = new StandarEnemyMove(this);
+        stateShoot = new StandarEnemyShoot(this);
+        
+        sm.AddState(stateMove);
+        sm.AddState(stateShoot);
+        
+        sm.AddTransition(stateMove, stateShoot, new Predicate(stateMove.IsReadyToShoot));
+        sm.AddTransition(stateShoot, stateMove, new Predicate(stateShoot.IsFinishedShooting));
+        
+        sm.SetInitialState(stateMove);
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
-        float dt = Time.deltaTime;
-
-        if (isMoving)
-        {
-            UpdateMove(dt);
-        }
-        else
-        {
-            UpdateShoot(dt);
-        }
-    }
-
-    void Fire()
-    {
-        GameObject p = GameObject.FindGameObjectWithTag("Player");
-        Vector3 targetShoot = (p) ? p.transform.position - transform.position : new Vector3(1, 0, 0);
-        targetShoot.Normalize();
-        float angle = (targetShoot.y > 0) ? Mathf.Rad2Deg * Mathf.Acos(targetShoot.x) : -Mathf.Rad2Deg * Mathf.Acos(targetShoot.x);
-        
-        GameObject newBullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0, 0, angle));
-        newBullet.GetComponent<Bullet>().Initialize(gameObject.tag, bulletSpeed, bulletLiveTime);
-    }
-
-    private void ShootReload()
-    {
-        if(bullets > 0)
-        {
-            Fire();
-            bullets--;
-            shootTimer.Play();
-        }
-        else
-        {
-            isMoving = true;
-            OnEnterMove();
-        }
+        sm.Update();
     }
 
     public override void Hit()
@@ -92,57 +66,4 @@ public class Enemy : Ship
             Destroy(gameObject);
         }
     }
-
-    private void OnEnterMove()
-    {
-        // Select where and how is going to move.
-        originalPos = transform.position;
-        GameObject p = GameObject.FindGameObjectWithTag("Player");
-        targetPos = (p) ? p.transform.position + offsetPosition : originalPos;
-
-        velocity = targetPos - originalPos;
-        velocity.Normalize();
-        velocity *= speed;
-
-        targetNormal = targetPos - originalPos;
-        targetNormal.Normalize();
-    }
-
-    private void UpdateMove(float dt)
-    {
-        Vector3 deltaVel = velocity * dt;
-        transform.position += deltaVel;
-
-        Vector3 targetDistance = targetPos - transform.position;
-        targetDistance.Normalize();
-        if (Vector3.Dot(targetDistance, targetNormal) < 0.0f)
-        {
-            isMoving = false;
-            OnExitMove();
-            OnEnterShoot();
-        }
-    }
-
-    private void OnExitMove()
-    {
-        Quaternion offsetRotation = Quaternion.AngleAxis(angleOffset, new Vector3(0.0f, 0.0f, 1.0f));
-        offsetPosition = offsetRotation * offsetPosition;
-    }
-
-    private void OnEnterShoot()
-    {
-        bullets = bulletsPerCicle;
-        shootTimer.Play();
-    }
-
-    private void UpdateShoot(float dt)
-    {
-        shootTimer.Update();
-    }
-
-    private void OnExitShoot()
-    {
-
-    }
-
 }

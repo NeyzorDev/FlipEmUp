@@ -48,14 +48,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints: 3
-  speed: 12
-  offsetPosition: {x: 4, y: 0, z: 0}
-  angleOffset: 45
-  bulletPrefab: {fileID: 1118927447165097035, guid: 5d188ca9cd105e14f98e19a688a1492f, type: 3}
-  shootTime: 0.3
-  bulletSpeed: 20
-  bulletLiveTime: 4
-  bulletsPerCicle: 3
+  test1:
+    isTest: 1
+    speed: 2.3
+    pos: {x: 0, y: 2, z: 1}
+    angle: 22.2
+  stateMove:
+    speed: 0
+    offsetPosition: {x: 0, y: 0, z: 0}
+    angleOffset: 0
+  stateShoot:
+    bulletPrefab: {fileID: 0}
+    shootTime: 0
+    bulletSpeed: 0
+    bulletLiveTime: 0
+    bulletsPerCicle: 0
 --- !u!212 &1030674115817878142
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -100,7 +107,7 @@ SpriteRenderer:
   m_SortingLayerID: -23396429
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_Sprite: {fileID: -2135585597343286014, guid: eed45a33cd08446c8b88325cf82fc52f, type: 3}
   m_Color: {r: 0.17661981, g: 0.2540106, b: 0.764151, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -149,7 +156,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.8828125, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

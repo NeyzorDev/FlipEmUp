@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-public abstract class Predicate : IPredicate
+public class Predicate : IPredicate
 {
     protected readonly Func<bool> funcEvaluation;
 
@@ -10,5 +10,5 @@ public abstract class Predicate : IPredicate
         funcEvaluation = func;
     }
 
-    public virtual bool Evaluate() => funcEvaluation.Invoke();
+    public bool Evaluate() => funcEvaluation.Invoke();
 }

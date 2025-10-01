@@ -4,20 +4,38 @@ using System.Collections.Generic;
 
 public class StateMachine
 {
+     private class StateNode
+    {
+        public IState State { get; }
+        public HashSet<ITransition> Transitions { get; }
+
+        public StateNode(IState state)
+        {
+            this.State = state;
+            Transitions = new HashSet<ITransition>();
+        }
+
+        public void AddTransition(IState s, IPredicate p)
+        {
+            Transitions.Add(new Transition(s, p));
+        }
+    }
+
     private StateNode current;
     private Dictionary<Type, StateNode> nodes;
-    public HashSet<ITransition> globalTransitions;
+    private HashSet<ITransition> globalTransitions;
 
     public StateMachine() 
     {
         nodes = new Dictionary<Type, StateNode>();
+        globalTransitions = new HashSet<ITransition>();
     }
 
     public void Update()
     {
-        current.state.Update();
+        current.State.Update();
 
-        foreach (Transition t in globalTransitions)
+        foreach (ITransition t in globalTransitions)
         {
             if (t.ExitCondition.Evaluate())
             {
@@ -25,7 +43,7 @@ public class StateMachine
             }
         }
 
-        foreach (Transition t in current.transitions)
+        foreach (ITransition t in current.Transitions)
         {
             if(t.ExitCondition.Evaluate())
             {
@@ -47,11 +65,16 @@ public class StateMachine
     {
         globalTransitions.Add(new Transition(to, condition));
     }
+    public void SetInitialState(IState newState)
+    {
+        current = nodes[newState.GetType()];
+        current.State.OnEnter();
+    }
 
     private void ChangeState(IState newState)
     {
-        current.state.OnExit();
+        current.State.OnExit();
         current = nodes[newState.GetType()];
-        current.state.OnStart();
+        current.State.OnEnter();
     }
 }
