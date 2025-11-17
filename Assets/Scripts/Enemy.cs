@@ -2,35 +2,19 @@ using System;
 using UnityEngine;
 
 
-[Serializable]
-public class serTest
-{
-    public bool isTest = true;
-    [SerializeField]
-    private float speed = 2.3f;
-    [SerializeField]
-    private Vector3 pos = new Vector3(0.0f, 2.0f, 1.0f);
-    [SerializeField]
-    private float angle = 22.2f;
-}
-
 public class Enemy : Ship
 {
-    [Header("Serializable Tests")]
-    [SerializeField]
-    private serTest test1 = null;
-    [SerializeReference]
-    private serTest test2 = null;
-    public serTest test3 = null;
-
     [Header("Behaviors")]
-    [SerializeField]
-    private StandarEnemyMove stateMove = null;
-    [SerializeField]
-    private StandarEnemyShoot stateShoot = null;
+    [SerializeReference]
+    private StandarEnemyMove stateMove = new StandarEnemyMove();
+    [SerializeReference]
+    private StandarEnemyShoot stateShoot = new StandarEnemyShoot();
 
     private StateMachine sm;
 
+    public Enemy()
+    {
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void Start()
@@ -41,9 +25,10 @@ public class Enemy : Ship
     private void InitializeSM()
     {
         sm = new StateMachine();
-        stateMove = new StandarEnemyMove(this);
-        stateShoot = new StandarEnemyShoot(this);
-        
+
+        stateMove.SetOwner(this);
+        stateShoot.SetOwner(this);
+
         sm.AddState(stateMove);
         sm.AddState(stateShoot);
         

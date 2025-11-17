@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 
 [Serializable]
-public class StandarEnemyMove : State
+public class StandarEnemyMove : State<Enemy>
 {
-    private readonly Enemy owner;
-
-    [Header("Movement")]
     [SerializeField]
     private float speed = 15.0f;
     [SerializeField]
@@ -23,15 +21,23 @@ public class StandarEnemyMove : State
 
     private Vector3 targetNormal;
 
-    public StandarEnemyMove(Enemy owner)
-    {
-        //this.owner = owner;
-
+    public StandarEnemyMove()
+    { 
         currOffsetPos = offsetPosition;
     }
 
+    /*public void SetOwner(Enemy owner)
+    {
+        if(this.owner == null)
+        {
+            this.owner = owner;
+        }
+    }*/
+
     public override void OnEnter()
     {
+        Assert.IsNotNull(owner);
+
         // Select where and how is going to move.
         originalPos = owner.transform.position;
         GameObject p = GameObject.FindGameObjectWithTag("Player");

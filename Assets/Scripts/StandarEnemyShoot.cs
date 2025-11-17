@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 
 [Serializable]
-public class StandarEnemyShoot : State
+public class StandarEnemyShoot : State<Enemy>
 {
-    private readonly Enemy owner;
-
-    [Header("Fire")]
     [SerializeField]
     private GameObject bulletPrefab;
     [SerializeField]
@@ -24,14 +22,15 @@ public class StandarEnemyShoot : State
 
     Vector3 targetNormal;
 
-    public StandarEnemyShoot(Enemy owner)
+    public StandarEnemyShoot()
     {
-        this.owner = owner;
         shootTimer = new Timer(shootTime, ShootReload);
     }
 
     public override void OnEnter()
     {
+        Assert.IsNotNull(owner);
+
         bullets = bulletsPerCicle;
         shootTimer.Play();
     }
