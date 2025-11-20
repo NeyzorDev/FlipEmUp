@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 
 
 [Serializable]
-public class StandarEnemyMove : State<Enemy>
+public class StandarEnemyMove : State<StandarEnemy>
 {
     [SerializeField]
     private float speed = 15.0f;

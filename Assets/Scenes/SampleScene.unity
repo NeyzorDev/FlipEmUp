@@ -128,8 +128,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 25134720}
+  - component: {fileID: 25134723}
   - component: {fileID: 25134719}
   - component: {fileID: 25134721}
+  - component: {fileID: 25134722}
   m_Layer: 8
   m_Name: Kamikaze
   m_TagString: Enemy
@@ -259,6 +261,69 @@ PolygonCollider2D:
       - {x: -0.15, y: -0.04}
       - {x: -0.35, y: -0.21}
   m_UseDelaunayMesh: 0
+--- !u!50 &25134722
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25134718}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
+--- !u!114 &25134723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25134718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7f45e1d5013b074081923bd2adde2e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 1
+  stateReposition:
+    rid: 6478060196934975568
+  stateTargetLock:
+    rid: 6478060196934975560
+  stateAttack:
+    rid: 6478060196934975561
+  references:
+    version: 2
+    RefIds:
+    - rid: 6478060196934975560
+      type: {class: KamikazeTargetLock, ns: , asm: Assembly-CSharp}
+      data:
+        time: 0.2
+    - rid: 6478060196934975561
+      type: {class: KamikazeAttack, ns: , asm: Assembly-CSharp}
+      data:
+        aceleration: 50
+        rotation: 15
+    - rid: 6478060196934975568
+      type: {class: KamikazeRePosition, ns: , asm: Assembly-CSharp}
+      data:
+        rotation: 45
+        velocity: 15
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,7 +431,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

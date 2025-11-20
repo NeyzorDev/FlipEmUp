@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-public class Enemy : Ship
+public class StandarEnemy : Ship
 {
     [Header("Behaviors")]
     [SerializeReference]
@@ -12,9 +12,6 @@ public class Enemy : Ship
 
     private StateMachine sm;
 
-    public Enemy()
-    {
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void Start()

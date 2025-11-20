@@ -10,10 +10,14 @@ public class Timer
 	private Action Timeout;
 
 
-	public Timer(float t, Action to)
-	{
-		time = t;
-		isPlaying = false;
+    public Timer(float t)
+    {
+        time = t;
+        isPlaying = false;
+    }
+
+    public Timer(float t, Action to) : this(t)
+    {
 		Timeout += to;
 	}
 
@@ -35,5 +39,10 @@ public class Timer
 				Timeout.Invoke();
 			}
         }
+	}
+
+	public bool IsPlaying()
+	{
+		return isPlaying;
 	}
 }

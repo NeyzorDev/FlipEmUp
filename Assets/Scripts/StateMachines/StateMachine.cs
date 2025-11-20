@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 
@@ -33,6 +34,8 @@ public class StateMachine
 
     public void Update()
     {
+        Assert.IsNotNull(current, "StateMachine has not any current state selected.");
+
         current.State.Update();
 
         foreach (ITransition t in globalTransitions)

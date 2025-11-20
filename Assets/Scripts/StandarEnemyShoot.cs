@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 
 
 [Serializable]
-public class StandarEnemyShoot : State<Enemy>
+public class StandarEnemyShoot : State<StandarEnemy>
 {
     [SerializeField]
     private GameObject bulletPrefab;
