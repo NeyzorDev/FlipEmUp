@@ -40,7 +40,7 @@ class KamikazeEnemy : Ship
         sm.AddState(stateAttack);
         
         sm.AddTransition(stateReposition, stateTargetLock, new Predicate(stateReposition.IsLockedOnTarget));
-        sm.AddTransition(stateTargetLock, stateAttack, new Predicate(stateTargetLock.isAttackTime));
+        sm.AddTransition(stateTargetLock, stateReposition, new Predicate(stateTargetLock.isAttackTime));
         sm.AddTransition(stateAttack, stateReposition, new Predicate(stateAttack.HasPassedAttackLimit));
 
         sm.SetInitialState(stateReposition);
@@ -57,6 +57,15 @@ class KamikazeEnemy : Ship
         if (--hitPoints <= 0)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<Player>().Hit();
+            Hit();
         }
     }
 }

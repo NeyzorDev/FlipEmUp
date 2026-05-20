@@ -14,11 +14,12 @@ public class Timer
     {
         time = t;
         isPlaying = false;
+        Timeout = null;
     }
 
     public Timer(float t, Action to) : this(t)
     {
-		Timeout += to;
+		Timeout = to;
 	}
 
 	public void Play()
@@ -36,12 +37,12 @@ public class Timer
             if (timer > time)
 			{
 				isPlaying = false;
-				Timeout.Invoke();
+				Timeout?.Invoke();
 			}
         }
 	}
 
-	public bool IsPlaying()
+    public bool IsPlaying()
 	{
 		return isPlaying;
 	}

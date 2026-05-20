@@ -25,7 +25,7 @@ class KamikazeAttack : State<KamikazeEnemy>
 
     public override void Update()
     {
-        //phy.AddForce(new Vector2(aceleration, 0.0f), ForceMode2D.Force);
+        phy.AddForce(new Vector2(aceleration, 0.0f), ForceMode2D.Force);
         HasPassedAttackLimit();
     }
 

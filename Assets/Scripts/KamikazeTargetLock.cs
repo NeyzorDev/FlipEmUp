@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 class KamikazeTargetLock : State<KamikazeEnemy>
 {
     [SerializeField]
-    private float time = 0.2f;
+    private float time = 2.2f;
 
     private Timer attackTimer;
 
@@ -17,6 +17,7 @@ class KamikazeTargetLock : State<KamikazeEnemy>
         attackTimer = new Timer(time);
         attackTimer.Play();
 
+        GameObject.Find("Text").GetComponent<UnityEngine.UI.Text>().text = "State Kamikaze Target Lock";
     }
 
     public override void Update()
