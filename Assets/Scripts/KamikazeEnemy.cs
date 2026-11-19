@@ -1,24 +1,8 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class bState
-{
-    public Action OnEnter;
-    public Action Update;
-    public Action OnExit;
 
-    public static bState Create(Action enter, Action update, Action exit)
-    {
-        bState state = new bState();
-
-        state.OnEnter = enter;
-        state.Update = update;
-        state.OnExit = exit;
-
-        return state;
-    }
-}
 
 
 class KamikazeEnemy : Ship
@@ -37,37 +21,37 @@ class KamikazeEnemy : Ship
     [SerializeReference]
     private float maxSpeed = 100.0f;
     [SerializeReference]
-    private float acceleration = 120.0f;
+    private float acceleration = 120.0f; //50.0f
     [SerializeReference]
     private float angle = 10;
-
-    //private StateMachine sm;
 
     // ----
 
     private GameObject player;
     private float velocity;
 
-    private enum actionState
-    {
-        None,
-        Attack,
-        Brake,
-        Retarget
-    }
+    Rigidbody2D phy;
 
-    bState Attack;
-    
-    private actionState action;
-    private actionState prevAction;
+    private StateMachine sm;
+
 
     public void Start()
     {
-        prevAction = actionState.None;
-        action = actionState.Retarget;
+        phy = GetComponent<Rigidbody2D>();
 
+        InitializeSM();
+    }
+    private void InitializeSM()
+    {
+        sm = new StateMachine();
 
-        Attack = bState.Create(AttackEnter ,AttackUpdate, AttackExit);
+        // Define states.
+        State attack = sm.CreateState("Attack", AttackEnter, AttackUpdate, AttackExit);
+        State brake = sm.CreateState("Brake", Idle, Idle, Idle);
+        
+        // Define transitions.
+        sm.AddTransition(attack, brake, IsAttackDodged);
+        sm.SetInitialState(attack);
     }
 
     // Update is called once per frame
@@ -81,30 +65,10 @@ class KamikazeEnemy : Ship
             return;
         }
 
-
-        if (action != prevAction)
-        {
-            if (action == actionState.Attack) { AttackEnter(); }
-            else if (action == actionState.Brake) {/* AttackEnter() */; }
-            else if (action == actionState.Retarget) { /* AttackEnter()*/ ; }
-        }
-        prevAction = action;
-
-        if (action == actionState.Attack)
-        {
-            AttackUpdate();
-        }
-        else if (action == actionState.Brake)
-        {
-
-        }
-        else if (action == actionState.Retarget)
-        {
-
-        }
+        sm.Update();
     }
 
-    //Estados Acceleration, Deceleration, Reposition.
+    //Attack, Brake, Retarget.
     private void AttackEnter()
     {
 
@@ -119,19 +83,14 @@ class KamikazeEnemy : Ship
 
         transform.position = transform.forward * velocity * dt;
 
-
-        //Exit Condition.
-        if (IsDodged())
-        {
-            // Swap state
-            action = actionState.Brake;
-            AttackExit();
-        }
+        //phy.AddForce(new Vector2(aceleration, 0.0f), ForceMode2D.Force);
     }
-    private bool IsDodged()
+
+    // Attack Exit Condition
+    private bool IsAttackDodged()
     {
         //Exit Condition.
-        return Vector3.Dot(transform.forward, Vector3.Normalize(player.transform.position - transform.position)) > 0.0f;
+        return Vector3.Dot(transform.forward, Vector3.Normalize(player.transform.position - transform.position)) < 0.0f;
     }
 
     private void AttackExit()
@@ -139,6 +98,7 @@ class KamikazeEnemy : Ship
 
     }
 
+    private void Idle() { }
 
     public override void Hit()
     {

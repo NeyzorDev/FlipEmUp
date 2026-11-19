@@ -1,49 +1,36 @@
 ﻿using System;
 using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+/*[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 public sealed class CustomSelectorAttribute : PropertyAttribute
 {
 
+}*/
+
+public interface IState
+{
+    public String name { get; }
 }
 
 [Serializable]
-public abstract class State<T> : IState
+public struct State : IState
 {
-    //protected readonly MonoBehaviour owner;
-    //protected readonly Animator animator;
+    public static Action VoidAction = () => { };
 
-    protected T owner;
+    public String name { get; }
 
-    public State()
+    public Action OnEnter;
+    public Action Update;
+    public Action FixedUpdate;
+    public Action OnExit;
+
+    public State(String name)
     {
-    }
-
-    public void SetOwner(T owner)
-    {
-        if (this.owner == null)
-        {
-            this.owner = owner;
-        }
-    }
-
-    public virtual void OnEnter()
-    {
-        // NotImplemented
-    }
-
-    public virtual void Update()
-    {
-        // NotImplemented
-    }
-
-    public virtual void FixedUpdate()
-    {
-        // NotImplemented
-    }
-
-    public virtual void OnExit()
-    {
-        // NotImplemented
+        this.name = name;
+        OnEnter = VoidAction;
+        Update = VoidAction;
+        FixedUpdate = VoidAction;
+        OnExit = VoidAction;
     }
 }
+

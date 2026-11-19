@@ -1,83 +1,108 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
 
 
 public class StateMachine
 {
-     private class StateNode
+    private class StateNode
     {
-        public IState State { get; }
+        public State state { get; }
         public HashSet<ITransition> Transitions { get; }
 
-        public StateNode(IState state)
+        public StateNode(State state)
         {
-            this.State = state;
+            this.state = state;
             Transitions = new HashSet<ITransition>();
         }
 
-        public void AddTransition(IState s, IPredicate p)
+        public void AddTransition(State s, Func<bool> p)
         {
             Transitions.Add(new Transition(s, p));
         }
     }
 
+    private StateNode previous;
     private StateNode current;
-    private Dictionary<Type, StateNode> nodes;
-    private HashSet<ITransition> globalTransitions;
+    private Dictionary<String, StateNode> nodes;
+    //private HashSet<ITransition> globalTransitions;
 
-    public StateMachine() 
+    public StateMachine()
     {
-        nodes = new Dictionary<Type, StateNode>();
-        globalTransitions = new HashSet<ITransition>();
+        previous = null;
+        current = null;
+
+        nodes = new Dictionary<String, StateNode>();
+        //globalTransitions = new HashSet<ITransition>();
     }
 
     public void Update()
     {
         Assert.IsNotNull(current, "StateMachine has not any current state selected.");
 
-        current.State.Update();
-
-        foreach (ITransition t in globalTransitions)
+        // On Enter State.
+        if (previous == null || current != previous)
         {
-            if (t.ExitCondition.Evaluate())
-            {
-                ChangeState(t.ToState);
-            }
+            current.state.OnEnter();
         }
 
+        previous = current;
+
+        // Update State.
+        current.state.Update();
+
+        //Evaluating Exit Conditions.
         foreach (ITransition t in current.Transitions)
         {
-            if(t.ExitCondition.Evaluate())
+            if (t.ExitCondition())
             {
                 ChangeState(t.ToState);
             }
         }
+
+        // On Exit State
+        if (current != previous)
+        {
+            previous.state.OnExit();
+        }
     }
 
-    public void AddState(IState state)
+    public State CreateState(String name, Action enter, Action update, Action exit)
     {
-        nodes.Add(state.GetType(), new StateNode(state));
+        State action = new State(name);
+
+        action.OnEnter = enter;
+        action.Update = update;
+        action.OnExit = exit;
+
+        nodes[name] = new StateNode(action);
+
+        return action;
     }
 
-    public void AddTransition(IState from, IState to, IPredicate condition)
+    public void AddTransition(State from, State to, Func<bool> condition)
     {
-        nodes[from.GetType()].AddTransition(to, condition);
+        nodes[from.name].AddTransition(to, condition);
     }
-    public void AddGlobalTransition(IState to, IPredicate condition)
+
+    /*public void AddGlobalTransition(IState to, Func<bool> condition)
     {
         globalTransitions.Add(new Transition(to, condition));
-    }
+    }*/
+
     public void SetInitialState(IState newState)
     {
-        current = nodes[newState.GetType()];
-        current.State.OnEnter();
+        current = nodes[newState.name];
+
+        GameObject.Find("Text").GetComponent<UnityEngine.UI.Text>().text = "Current State: " + newState.name;
     }
 
     private void ChangeState(IState newState)
     {
-        current.State.OnExit();
-        current = nodes[newState.GetType()];
-        current.State.OnEnter();
+        current = nodes[newState.name];
+
+        GameObject.Find("Text").GetComponent<UnityEngine.UI.Text>().text = "Current State: " + newState.name;
     }
 }

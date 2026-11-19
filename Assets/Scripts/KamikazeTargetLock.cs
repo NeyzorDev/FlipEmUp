@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 [Serializable]
-class KamikazeTargetLock : State<KamikazeEnemy>
+class KamikazeTargetLock
 {
     [SerializeField]
     private float time = 2.2f;
@@ -12,7 +12,7 @@ class KamikazeTargetLock : State<KamikazeEnemy>
 
 
 
-    public override void OnEnter()
+    public void OnEnter()
     {
         attackTimer = new Timer(time);
         attackTimer.Play();
@@ -20,7 +20,7 @@ class KamikazeTargetLock : State<KamikazeEnemy>
         GameObject.Find("Text").GetComponent<UnityEngine.UI.Text>().text = "State Kamikaze Target Lock";
     }
 
-    public override void Update()
+    public void Update()
     {
         attackTimer.Update();
     }
